@@ -6,13 +6,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap; 
+import java.util.Map; 
+import java.util.Scanner;
+
 
 /**
- * Servlet implementation class NotificationsAPI
+ * Servlet implementation class ItemsAPI
  */
 @WebServlet("/NotificationsAPI")
 public class NotificationsAPI extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	Notification itemObj = new Notification(); 
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -35,21 +40,38 @@ public class NotificationsAPI extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
+		String output = itemObj.insertNotification(request.getParameter("notificationCode"), 
+				 						   request.getParameter("message"), 
+				 						   request.getParameter("date"), 
+				 						   request.getParameter("timePeriod"),
+				 						   request.getParameter("area"),
+				 						   request.getParameter("establishedBy")); 
+	    response.getWriter().write(output);
+		
 		doGet(request, response);
 	}
-
-	/**
-	 * @see HttpServlet#doPut(HttpServletRequest, HttpServletResponse)
-	 */
-	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
-
-	/**
-	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
-	 */
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-	}
-
+	
+	// Convert request parameters to a Map
+	private static Map getParasMap(HttpServletRequest request) 
+	{ 
+	 Map<String, String> map = new HashMap<String, String>(); 
+	try
+	 { 
+	 Scanner scanner = new Scanner(request.getInputStream(), "UTF-8"); 
+	 String queryString = scanner.hasNext() ? 
+	 scanner.useDelimiter("\\A").next() : ""; 
+	 scanner.close(); 
+	 String[] params = queryString.split("&"); 
+	 for (String param : params) 
+	 {
+		 String[] p = param.split("=");
+		 map.put(p[0], p[1]); 
+		 } 
+		 } 
+		catch (Exception e) 
+		 { 
+		 } 
+		return map; 
+		}
 }
