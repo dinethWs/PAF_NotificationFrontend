@@ -68,6 +68,68 @@ public class Notification {
 					return output; 
 			} 
 			
+
+public String readNotifications() 
+		{ 
+			String output = ""; 
+			try
+			{ 
+				Connection con = connect(); 
+		 if (con == null) 
+		 { 
+		 return "Error while connecting to the database for reading."; 
+		 } 
+		 // Prepare the html table to be displayed
+		 output = "<table border=\"1\" class=\"table\"><tr>"
+		 		+ "<th>Notification Code</th>"
+		 		+ "<th>Message</th>"
+		 		+ "<th>Date</th>"
+		 		+ "<th>Time Period</th>"
+		 		+ "<th>Area</th>"
+		 		+ "<th>Established By</th>"
+		 		+ "<th>Update</th>"
+		 		+ "<th>Remove</th></tr>"; 
+		
+		 String query = "select * from interruption"; 
+		 Statement stmt = con.createStatement(); 
+		 ResultSet rs = stmt.executeQuery(query); 
+		 // iterate through the rows in the result set
+		 while (rs.next()) 
+		 { 
+			    String notificationId = Integer.toString(rs.getInt("notificationId"));
+				String notificationCode = rs.getString("notificationCode");
+				String message = rs.getString("message");
+				String date = rs.getString("date");
+				String timePeriod = rs.getString("timePeriod");
+				String area = rs.getString("area");
+				String establishedBy = rs.getString("establishedBy");
+		 
+		 // Add into the html table
+		 output += "<tr><td><input id='hidItemIDUpdate' name='hidItemIDUpdate' type='hidden' value='"+notificationId+"'>"+notificationCode+"</td>"; 
+		 output += "<td>" + message + "</td>"; 
+		 output += "<td>" + date + "</td>"; 
+		 output += "<td>" + timePeriod + "</td>";
+		 output += "<td>" + area + "</td>";
+		 output += "<td>" + establishedBy + "</td>";
+		 // buttons
+		 output += "<td><input name='btnUpdate' type='button' value='Update' "
+				 + "class='btnUpdate btn btn-secondary' data-itemid='" + notificationId + "'></td>"
+				 + "<td><input name='btnRemove' type='button' value='Remove' "
+				 + "class='btnRemove btn btn-danger' data-itemid='" + notificationId + "'></td></tr>"; 
+		 
+		 } 
+		 con.close(); 
+		 // Complete the html table
+		 output += "</table>"; 
+		 } 
+		 
+		catch (Exception e) 
+		 { 
+		 output = "Error while reading the Notifications."; 
+		 System.err.println(e.getMessage()); 
+		 } 
+		return output; 
+		}
 			
 			
 			
