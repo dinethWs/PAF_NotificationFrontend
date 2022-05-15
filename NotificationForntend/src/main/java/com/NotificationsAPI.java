@@ -51,6 +51,33 @@ public class NotificationsAPI extends HttpServlet {
 		
 		doGet(request, response);
 	}
+
+	/**
+	 * @see HttpServlet#doPut(HttpServletRequest, HttpServletResponse)
+	 */
+	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
+		 Map paras = getParasMap(request); 
+		 String output = itemObj.updateNotification(paras.get("hidItemIDSave").toString(), 
+				 							paras.get("notificationCode").toString(), 
+				 							paras.get("message").toString(), 
+				 							paras.get("date").toString(), 
+				 							paras.get("timePeriod").toString(),
+				 							paras.get("area").toString(),
+				 							paras.get("establishedBy").toString()); 
+		response.getWriter().write(output); 
+	}
+
+	/**
+	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
+	 */
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		Map paras = getParasMap(request); 
+		 String output = itemObj.deleteNotification(paras.get("notificationId").toString()); 
+		response.getWriter().write(output);
+	}
 	
 	// Convert request parameters to a Map
 	private static Map getParasMap(HttpServletRequest request) 
@@ -75,3 +102,6 @@ public class NotificationsAPI extends HttpServlet {
 		return map; 
 		}
 }
+	
+
+
