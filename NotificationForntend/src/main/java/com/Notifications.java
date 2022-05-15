@@ -67,9 +67,10 @@ public class Notification {
 					} 
 					return output; 
 			} 
-			
-
-public String readNotifications() 
+		
+		
+		
+		public String readNotifications() 
 		{ 
 			String output = ""; 
 			try
@@ -130,8 +131,79 @@ public String readNotifications()
 		 } 
 		return output; 
 		}
+
+		//update	
+			
+			public String updateNotification(String notificationId, String notificationCode, String message, String date, String timePeriod, String area, String establishedBy){ 
+				
+				String output = ""; 
+					
+				try{ 
+						Connection con = connect(); 
+						if (con == null){
+								return "Error while connecting to the database for updating.";
+							} 
+						// create a prepared statement
+						String query = "UPDATE interruption SET notificationCode=?, message=?, date=?, timePeriod=?, area=?, establishedBy=? WHERE notificationId=?"; 
+						PreparedStatement preparedStmt = con.prepareStatement(query);
+						
+						// binding values
+						preparedStmt.setString(1, notificationCode);
+						preparedStmt.setString(2, message);
+						preparedStmt.setString(3, date);
+						preparedStmt.setString(4, timePeriod);
+						preparedStmt.setString(5, area);
+						preparedStmt.setString(6, establishedBy);
+						preparedStmt.setInt(7, Integer.parseInt(notificationId));
+						
+						// execute the statement
+						preparedStmt.execute(); 
+						con.close(); 
+						String newNotifications = readNotifications(); 
+						output = "{\"status\":\"success\",\"data\":\""+newNotifications+"\"}"; 
+
+					} 
+					
+					catch (Exception e){ 
+						
+						output = "{\"status\":\"error\",\"data\":\"Error while updating the Notifiaction.\"}"; 
+						System.err.println(e.getMessage()); 						
+					} 
+					
+					return output; 
+			} 
+			
+			
+			public String deleteNotification(String notificationId){ 
+					String output = ""; 
+					
+					try{ 
+						Connection con = connect(); 
+						
+						if (con == null){
+							return "Error while connecting to the database for deleting."; 
+							} 
+						// create a prepared statement
+						String query = "delete from interruption where notificationId=?"; 
+						PreparedStatement preparedStmt = con.prepareStatement(query); 
+						// binding values
+						preparedStmt.setInt(1, Integer.parseInt(notificationId)); 
+						// execute the statement
+						preparedStmt.execute(); 
+						con.close(); 
+						String newNotifications = readNotifications(); 
+						 output = "{\"status\":\"success\",\"data\":\""+newNotifications+"\"}"; 
+
+					} 
+					
+					catch (Exception e){ 
+						output = "{\"status\":\"error\",\"data\":\"Error while deleting the Notification.\"}";
+						System.err.println(e.getMessage()); 
+					} 
+					return output; 
+			} 
+			
 			
 			
 			
 } 
-
